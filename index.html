@@ -306,6 +306,46 @@
             margin-bottom: 0.5rem;
         }
         
+        /* Online Users */
+        .online-users {
+            background-color: var(--card-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .online-users-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .online-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(0, 255, 0, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .online-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
         /* Login/Register Modal */
         .modal {
             display: none;
@@ -430,6 +470,14 @@
                     <h1>wasong<span>CTF</span></h1>
                     <p>Platform Capture The Flag gratis untuk belajar ethical hacking dan keamanan siber di Indonesia. Tingkatkan skill hacking Anda dengan tantangan yang menarik!</p>
                     <a href="#" class="btn" id="start-challenge">Mulai Challenge</a>
+                </div>
+                
+                <!-- Online Users -->
+                <div class="online-users">
+                    <h3>Pengguna Online</h3>
+                    <div class="online-users-list" id="online-users-list">
+                        <!-- Daftar pengguna online akan diisi oleh JavaScript -->
+                    </div>
                 </div>
                 
                 <div class="about-content">
@@ -574,21 +622,23 @@
     </div>
     
     <script>
-        // Data contoh untuk demo
-        const sampleUsers = [
-            { username: "hacker_pro", score: 850 },
-            { username: "cyber_ninja", score: 720 },
-            { username: "security_guru", score: 650 },
-            { username: "code_breaker", score: 580 },
-            { username: "wasong_master", score: 500 },
-            { username: "binary_expert", score: 450 },
-            { username: "web_vulnerability", score: 400 },
-            { username: "crypto_lover", score: 350 }
-        ];
+        // Data untuk demo - hanya menyimpan data pengguna yang login
+        let users = JSON.parse(localStorage.getItem('wasongCTF_users')) || [];
+        let onlineUsers = JSON.parse(localStorage.getItem('wasongCTF_onlineUsers')) || [];
+        
+        // Data contoh untuk demo jika belum ada data
+        if (users.length === 0) {
+            users = [
+                { username: "admin", score: 1000, email: "admin@wasongctf.id" },
+                { username: "pengguna1", score: 750, email: "pengguna1@example.com" },
+                { username: "pengguna2", score: 600, email: "pengguna2@example.com" }
+            ];
+            localStorage.setItem('wasongCTF_users', JSON.stringify(users));
+        }
         
         const sampleChallenges = [
             { id: 1, title: "Web Exploitation: SQL Injection", category: "Web", points: 100, solved: false, description: "Temukan dan eksploitasi kerentanan SQL Injection pada aplikasi web" },
-            { id: 2, title: "Cryptography: Caesar Cipher", category: "Crypto", points: 50, solved: true, description: "Dekripsi pesan yang dienkripsi menggunakan Caesar Cipher" },
+            { id: 2, title: "Cryptography: Caesar Cipher", category: "Crypto", points: 50, solved: false, description: "Dekripsi pesan yang dienkripsi menggunakan Caesar Cipher" },
             { id: 3, title: "Forensics: Hidden Message", category: "Forensics", points: 75, solved: false, description: "Temukan pesan tersembunyi dalam file gambar" },
             { id: 4, title: "Reverse Engineering: Crackme", category: "Rev", points: 150, solved: false, description: "Reverse engineering binary untuk menemukan flag" },
             { id: 5, title: "Binary Exploitation: Buffer Overflow", category: "Pwn", points: 200, solved: false, description: "Eksploitasi kerentanan buffer overflow untuk mendapatkan shell" },
@@ -613,6 +663,7 @@
         const navLinks = document.querySelectorAll('.nav-link');
         const pages = document.querySelectorAll('.page');
         const startChallengeBtn = document.getElementById('start-challenge');
+        const onlineUsersList = document.getElementById('online-users-list');
         
         // Event Listeners
         loginBtn.addEventListener('click', () => {
@@ -684,6 +735,14 @@
             if (username && password) {
                 usernameDisplay.textContent = username;
                 loginModal.style.display = 'none';
+                
+                // Tambahkan pengguna ke daftar online
+                if (!onlineUsers.includes(username)) {
+                    onlineUsers.push(username);
+                    localStorage.setItem('wasongCTF_onlineUsers', JSON.stringify(onlineUsers));
+                    loadOnlineUsers();
+                }
+                
                 alert(`Login berhasil! Selamat datang, ${username}`);
             } else {
                 alert('Silakan isi semua field!');
@@ -703,10 +762,34 @@
                 return;
             }
             
-            // Simulasi registrasi (dalam implementasi nyata, ini akan berkomunikasi dengan backend)
+            // Cek apakah username sudah ada
+            if (users.find(user => user.username === username)) {
+                alert('Username sudah digunakan!');
+                return;
+            }
+            
+            // Simulasi registrasi
             if (username && email && password) {
+                // Tambahkan pengguna baru
+                const newUser = {
+                    username: username,
+                    email: email,
+                    score: 0
+                };
+                
+                users.push(newUser);
+                localStorage.setItem('wasongCTF_users', JSON.stringify(users));
+                
                 usernameDisplay.textContent = username;
                 registerModal.style.display = 'none';
+                
+                // Tambahkan pengguna ke daftar online
+                if (!onlineUsers.includes(username)) {
+                    onlineUsers.push(username);
+                    localStorage.setItem('wasongCTF_onlineUsers', JSON.stringify(onlineUsers));
+                    loadOnlineUsers();
+                }
+                
                 alert(`Registrasi berhasil! Selamat datang, ${username}`);
             } else {
                 alert('Silakan isi semua field!');
@@ -718,7 +801,7 @@
             scoreboardBody.innerHTML = '';
             
             // Urutkan pengguna berdasarkan skor (tertinggi ke terendah)
-            const sortedUsers = [...sampleUsers].sort((a, b) => b.score - a.score);
+            const sortedUsers = [...users].sort((a, b) => b.score - a.score);
             
             sortedUsers.forEach((user, index) => {
                 const row = document.createElement('tr');
@@ -747,6 +830,26 @@
                     <button class="btn" style="margin-top: 1rem;">Lihat Detail</button>
                 `;
                 challengesContainer.appendChild(card);
+            });
+        }
+        
+        // Load Online Users
+        function loadOnlineUsers() {
+            onlineUsersList.innerHTML = '';
+            
+            if (onlineUsers.length === 0) {
+                onlineUsersList.innerHTML = '<p>Tidak ada pengguna online saat ini.</p>';
+                return;
+            }
+            
+            onlineUsers.forEach(username => {
+                const userElement = document.createElement('div');
+                userElement.className = 'online-user';
+                userElement.innerHTML = `
+                    <div class="online-indicator"></div>
+                    <span>${username}</span>
+                `;
+                onlineUsersList.appendChild(userElement);
             });
         }
         
@@ -814,6 +917,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadScoreboard();
             loadChallenges();
+            loadOnlineUsers();
             createMatrixRain();
         });
     </script>
