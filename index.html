@@ -27,6 +27,18 @@
             color: var(--text-color);
             overflow-x: hidden;
             line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Efek Hujan Kode */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
         }
         
         /* Efek Glitch Background */
@@ -96,10 +108,25 @@
             color: var(--text-color);
             text-decoration: none;
             transition: color 0.3s;
+            position: relative;
         }
         
         .nav-links a:hover {
             color: var(--primary-color);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
         }
         
         .user-info {
@@ -148,6 +175,15 @@
         /* Main Content */
         .main-content {
             padding: 2rem 0;
+            min-height: 60vh;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
         }
         
         .section-title {
@@ -220,6 +256,54 @@
         .challenge-solved {
             color: var(--primary-color);
             margin-top: 0.5rem;
+        }
+        
+        .challenge-category {
+            display: inline-block;
+            background-color: rgba(0, 255, 0, 0.1);
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* About Section */
+        .about-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .about-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .about-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background-color: rgba(0, 255, 0, 0.05);
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .feature-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
         }
         
         /* Login/Register Modal */
@@ -316,6 +400,7 @@
     </style>
 </head>
 <body>
+    <div class="matrix-rain" id="matrixRain"></div>
     <div class="glitch-bg"></div>
     
     <header>
@@ -323,10 +408,10 @@
             <div class="navbar">
                 <div class="logo">wasong<span>CTF</span></div>
                 <div class="nav-links">
-                    <a href="#home">Beranda</a>
-                    <a href="#challenges">Soal</a>
-                    <a href="#scoreboard">Scoreboard</a>
-                    <a href="#about">Tentang</a>
+                    <a href="#" class="nav-link active" data-page="home">Beranda</a>
+                    <a href="#" class="nav-link" data-page="challenges">Soal</a>
+                    <a href="#" class="nav-link" data-page="scoreboard">Scoreboard</a>
+                    <a href="#" class="nav-link" data-page="about">Tentang</a>
                 </div>
                 <div class="user-info">
                     <span id="username-display">Guest</span>
@@ -337,17 +422,55 @@
         </div>
     </header>
     
-    <section class="hero" id="home">
-        <div class="container">
-            <h1>wasong<span>CTF</span></h1>
-            <p>Platform Capture The Flag gratis untuk belajar ethical hacking dan keamanan siber di Indonesia. Tingkatkan skill hacking Anda dengan tantangan yang menarik!</p>
-            <a href="#challenges" class="btn">Mulai Challenge</a>
-        </div>
-    </section>
-    
     <main class="main-content">
         <div class="container">
-            <section id="scoreboard">
+            <!-- Home Page -->
+            <section class="page active" id="home-page">
+                <div class="hero">
+                    <h1>wasong<span>CTF</span></h1>
+                    <p>Platform Capture The Flag gratis untuk belajar ethical hacking dan keamanan siber di Indonesia. Tingkatkan skill hacking Anda dengan tantangan yang menarik!</p>
+                    <a href="#" class="btn" id="start-challenge">Mulai Challenge</a>
+                </div>
+                
+                <div class="about-content">
+                    <h2>Apa itu wasongCTF?</h2>
+                    <p>wasongCTF adalah platform pembelajaran keamanan siber berbasis CTF (Capture The Flag) yang dirancang khusus untuk komunitas Indonesia. Platform ini menyediakan berbagai tantangan keamanan siber dalam berbagai kategori seperti Web Exploitation, Cryptography, Forensics, Reverse Engineering, dan lainnya.</p>
+                    
+                    <h3>Mengapa wasongCTF?</h3>
+                    <p>Kami percaya bahwa pendidikan keamanan siber harus dapat diakses oleh semua orang. wasongCTF hadir sebagai solusi untuk membantu para pemula dan profesional di Indonesia untuk mengasah kemampuan keamanan siber mereka secara gratis.</p>
+                    
+                    <div class="features">
+                        <div class="feature-card">
+                            <h4>Gratis</h4>
+                            <p>Akses semua tantangan tanpa biaya</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Beragam Kategori</h4>
+                            <p>Web, Crypto, Forensics, Pwn, dan lainnya</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Komunitas Indonesia</h4>
+                            <p>Belajar bersama komunitas lokal</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Scoreboard</h4>
+                            <p>Kompetisi sehat dengan peserta lain</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Challenges Page -->
+            <section class="page" id="challenges-page">
+                <h2 class="section-title">Challenges</h2>
+                
+                <div class="challenges-grid" id="challenges-container">
+                    <!-- Daftar challenge akan diisi oleh JavaScript -->
+                </div>
+            </section>
+            
+            <!-- Scoreboard Page -->
+            <section class="page" id="scoreboard-page">
                 <h2 class="section-title">Scoreboard</h2>
                 <div class="scoreboard">
                     <table>
@@ -365,10 +488,27 @@
                 </div>
             </section>
             
-            <section id="challenges">
-                <h2 class="section-title">Challenges</h2>
-                <div class="challenges-grid" id="challenges-container">
-                    <!-- Daftar challenge akan diisi oleh JavaScript -->
+            <!-- About Page -->
+            <section class="page" id="about-page">
+                <h2 class="section-title">Tentang wasongCTF</h2>
+                
+                <div class="about-content">
+                    <h3>Visi & Misi</h3>
+                    <p>Visi kami adalah menciptakan ekosistem keamanan siber Indonesia yang kuat dengan menyediakan platform pembelajaran yang mudah diakses dan berkualitas.</p>
+                    
+                    <h3>Tim Pengembang</h3>
+                    <p>wasongCTF dikembangkan oleh tim yang terdiri dari praktisi keamanan siber Indonesia yang memiliki passion dalam pendidikan dan pengembangan bakat di bidang keamanan siber.</p>
+                    
+                    <h3>Kontak</h3>
+                    <p>Jika Anda memiliki pertanyaan, saran, atau ingin berkontribusi, silakan hubungi kami melalui:</p>
+                    <ul>
+                        <li>Email: admin@wasongctf.id</li>
+                        <li>Telegram: @wasongctf</li>
+                        <li>Discord: wasongCTF Community</li>
+                    </ul>
+                    
+                    <h3>Cara Berkontribusi</h3>
+                    <p>Kami membuka kesempatan bagi siapa saja yang ingin berkontribusi dalam pengembangan wasongCTF, baik dengan membuat challenge baru, melaporkan bug, atau membantu pengembangan platform.</p>
                 </div>
             </section>
         </div>
@@ -440,16 +580,21 @@
             { username: "cyber_ninja", score: 720 },
             { username: "security_guru", score: 650 },
             { username: "code_breaker", score: 580 },
-            { username: "wasong_master", score: 500 }
+            { username: "wasong_master", score: 500 },
+            { username: "binary_expert", score: 450 },
+            { username: "web_vulnerability", score: 400 },
+            { username: "crypto_lover", score: 350 }
         ];
         
         const sampleChallenges = [
-            { id: 1, title: "Web Exploitation: SQL Injection", category: "Web", points: 100, solved: false },
-            { id: 2, title: "Cryptography: Caesar Cipher", category: "Crypto", points: 50, solved: true },
-            { id: 3, title: "Forensics: Hidden Message", category: "Forensics", points: 75, solved: false },
-            { id: 4, title: "Reverse Engineering: Crackme", category: "Rev", points: 150, solved: false },
-            { id: 5, title: "Binary Exploitation: Buffer Overflow", category: "Pwn", points: 200, solved: false },
-            { id: 6, title: "Steganography: Hidden Image", category: "Stego", points: 80, solved: false }
+            { id: 1, title: "Web Exploitation: SQL Injection", category: "Web", points: 100, solved: false, description: "Temukan dan eksploitasi kerentanan SQL Injection pada aplikasi web" },
+            { id: 2, title: "Cryptography: Caesar Cipher", category: "Crypto", points: 50, solved: true, description: "Dekripsi pesan yang dienkripsi menggunakan Caesar Cipher" },
+            { id: 3, title: "Forensics: Hidden Message", category: "Forensics", points: 75, solved: false, description: "Temukan pesan tersembunyi dalam file gambar" },
+            { id: 4, title: "Reverse Engineering: Crackme", category: "Rev", points: 150, solved: false, description: "Reverse engineering binary untuk menemukan flag" },
+            { id: 5, title: "Binary Exploitation: Buffer Overflow", category: "Pwn", points: 200, solved: false, description: "Eksploitasi kerentanan buffer overflow untuk mendapatkan shell" },
+            { id: 6, title: "Steganography: Hidden Image", category: "Stego", points: 80, solved: false, description: "Ekstrak gambar tersembunyi dari file lain" },
+            { id: 7, title: "Web Security: XSS Challenge", category: "Web", points: 120, solved: false, description: "Eksploitasi kerentanan XSS untuk mencuri cookie" },
+            { id: 8, title: "Network: Packet Analysis", category: "Networking", points: 90, solved: false, description: "Analisis paket jaringan untuk menemukan informasi rahasia" }
         ];
         
         // DOM Elements
@@ -465,6 +610,9 @@
         const usernameDisplay = document.getElementById('username-display');
         const scoreboardBody = document.getElementById('scoreboard-body');
         const challengesContainer = document.getElementById('challenges-container');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        const startChallengeBtn = document.getElementById('start-challenge');
         
         // Event Listeners
         loginBtn.addEventListener('click', () => {
@@ -499,6 +647,31 @@
             if (e.target === registerModal) {
                 registerModal.style.display = 'none';
             }
+        });
+        
+        // Navigation
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                
+                // Update active nav link
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show selected page
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById(`${pageId}-page`).classList.add('active');
+            });
+        });
+        
+        startChallengeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navLinks.forEach(nav => nav.classList.remove('active'));
+            document.querySelector('[data-page="challenges"]').classList.add('active');
+            
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById('challenges-page').classList.add('active');
         });
         
         // Form Submission
@@ -566,8 +739,9 @@
                 const card = document.createElement('div');
                 card.className = 'challenge-card';
                 card.innerHTML = `
+                    <div class="challenge-category">${challenge.category}</div>
                     <h3 class="challenge-title">${challenge.title}</h3>
-                    <p><strong>Kategori:</strong> ${challenge.category}</p>
+                    <p>${challenge.description}</p>
                     <p class="challenge-points">${challenge.points} Poin</p>
                     ${challenge.solved ? '<p class="challenge-solved">✓ Telah diselesaikan</p>' : ''}
                     <button class="btn" style="margin-top: 1rem;">Lihat Detail</button>
@@ -576,10 +750,71 @@
             });
         }
         
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const canvas = document.getElementById('matrixRain');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Characters for the rain
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*()[]{}|;:,.<>?/";
+            const charArray = chars.split('');
+            
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            
+            // Create an array of drops
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = 1;
+            }
+            
+            // Draw the characters
+            function draw() {
+                // Semi-transparent black background for trail effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#0F0'; // Green text
+                ctx.font = fontSize + 'px monospace';
+                
+                // Loop over drops
+                for (let i = 0; i < drops.length; i++) {
+                    // Random character to print
+                    const text = charArray[Math.floor(Math.random() * charArray.length)];
+                    
+                    // x = i * fontSize, y = value of drops[i] * fontSize
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    // Send the drop back to the top after it has crossed the screen
+                    // Add randomness to the reset
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    
+                    // Increment Y coordinate
+                    drops[i]++;
+                }
+            }
+            
+            // Adjust canvas on resize
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            
+            // Start the animation
+            setInterval(draw, 35);
+        }
+        
         // Inisialisasi
         document.addEventListener('DOMContentLoaded', () => {
             loadScoreboard();
             loadChallenges();
+            createMatrixRain();
         });
     </script>
 </body>
