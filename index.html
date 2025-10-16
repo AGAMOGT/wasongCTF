@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wasongCTF - Platform CTF Gratis Indonesia</title>
+    <style>
+        :root {
+            --primary-color: #00ff00;
+            --secondary-color: #008000;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --card-bg: #0a0a0a;
+            --glitch-color1: #ff00ff;
+            --glitch-color2: #00ffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* Efek Glitch Background */
+        .glitch-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            background: 
+                linear-gradient(90deg, transparent 79px, var(--glitch-color1) 81px, transparent 83px),
+                linear-gradient(var(--glitch-color2) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px;
+            animation: glitch 0.5s infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: rgba(10, 10, 10, 0.9);
+            border-bottom: 1px solid var(--primary-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+        
+        .logo span {
+            color: var(--text-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Scoreboard */
+        .scoreboard {
+            background-color: var(--card-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+        
+        th {
+            color: var(--primary-color);
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 255, 0, 0.05);
+        }
+        
+        /* Challenges */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .challenge-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .challenge-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+        
+        .challenge-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .challenge-points {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .challenge-solved {
+            color: var(--primary-color);
+            margin-top: 0.5rem;
+        }
+        
+        /* Login/Register Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            border-radius: 3px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-switch {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .form-switch a {
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: rgba(10, 10, 10, 0.9);
+            border-top: 1px solid var(--primary-color);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch-bg"></div>
+    
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">wasong<span>CTF</span></div>
+                <div class="nav-links">
+                    <a href="#home">Beranda</a>
+                    <a href="#challenges">Soal</a>
+                    <a href="#scoreboard">Scoreboard</a>
+                    <a href="#about">Tentang</a>
+                </div>
+                <div class="user-info">
+                    <span id="username-display">Guest</span>
+                    <button class="btn" id="login-btn">Login</button>
+                    <button class="btn" id="register-btn">Daftar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>wasong<span>CTF</span></h1>
+            <p>Platform Capture The Flag gratis untuk belajar ethical hacking dan keamanan siber di Indonesia. Tingkatkan skill hacking Anda dengan tantangan yang menarik!</p>
+            <a href="#challenges" class="btn">Mulai Challenge</a>
+        </div>
+    </section>
+    
+    <main class="main-content">
+        <div class="container">
+            <section id="scoreboard">
+                <h2 class="section-title">Scoreboard</h2>
+                <div class="scoreboard">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Peringkat</th>
+                                <th>Nama Pengguna</th>
+                                <th>Skor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scoreboard-body">
+                            <!-- Data scoreboard akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section id="challenges">
+                <h2 class="section-title">Challenges</h2>
+                <div class="challenges-grid" id="challenges-container">
+                    <!-- Daftar challenge akan diisi oleh JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 wasongCTF - Platform CTF Gratis Indonesia</p>
+            <p>Dibuat untuk komunitas ethical hacking Indonesia</p>
+        </div>
+    </footer>
+    
+    <!-- Modal Login -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Nama Pengguna</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Kata Sandi</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Login</button>
+            </form>
+            <div class="form-switch">
+                <p>Belum punya akun? <a id="switch-to-register">Daftar di sini</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Register -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Daftar</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username">Nama Pengguna</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Kata Sandi</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Konfirmasi Kata Sandi</label>
+                    <input type="password" id="register-confirm-password" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Daftar</button>
+            </form>
+            <div class="form-switch">
+                <p>Sudah punya akun? <a id="switch-to-login">Login di sini</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data contoh untuk demo
+        const sampleUsers = [
+            { username: "hacker_pro", score: 850 },
+            { username: "cyber_ninja", score: 720 },
+            { username: "security_guru", score: 650 },
+            { username: "code_breaker", score: 580 },
+            { username: "wasong_master", score: 500 }
+        ];
+        
+        const sampleChallenges = [
+            { id: 1, title: "Web Exploitation: SQL Injection", category: "Web", points: 100, solved: false },
+            { id: 2, title: "Cryptography: Caesar Cipher", category: "Crypto", points: 50, solved: true },
+            { id: 3, title: "Forensics: Hidden Message", category: "Forensics", points: 75, solved: false },
+            { id: 4, title: "Reverse Engineering: Crackme", category: "Rev", points: 150, solved: false },
+            { id: 5, title: "Binary Exploitation: Buffer Overflow", category: "Pwn", points: 200, solved: false },
+            { id: 6, title: "Steganography: Hidden Image", category: "Stego", points: 80, solved: false }
+        ];
+        
+        // DOM Elements
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        const switchToRegister = document.getElementById('switch-to-register');
+        const switchToLogin = document.getElementById('switch-to-login');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const usernameDisplay = document.getElementById('username-display');
+        const scoreboardBody = document.getElementById('scoreboard-body');
+        const challengesContainer = document.getElementById('challenges-container');
+        
+        // Event Listeners
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+        
+        registerBtn.addEventListener('click', () => {
+            registerModal.style.display = 'flex';
+        });
+        
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'none';
+            });
+        });
+        
+        switchToRegister.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'flex';
+        });
+        
+        switchToLogin.addEventListener('click', () => {
+            registerModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (e.target === registerModal) {
+                registerModal.style.display = 'none';
+            }
+        });
+        
+        // Form Submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simulasi login (dalam implementasi nyata, ini akan berkomunikasi dengan backend)
+            if (username && password) {
+                usernameDisplay.textContent = username;
+                loginModal.style.display = 'none';
+                alert(`Login berhasil! Selamat datang, ${username}`);
+            } else {
+                alert('Silakan isi semua field!');
+            }
+        });
+        
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            // Validasi sederhana
+            if (password !== confirmPassword) {
+                alert('Kata sandi tidak cocok!');
+                return;
+            }
+            
+            // Simulasi registrasi (dalam implementasi nyata, ini akan berkomunikasi dengan backend)
+            if (username && email && password) {
+                usernameDisplay.textContent = username;
+                registerModal.style.display = 'none';
+                alert(`Registrasi berhasil! Selamat datang, ${username}`);
+            } else {
+                alert('Silakan isi semua field!');
+            }
+        });
+        
+        // Load Scoreboard
+        function loadScoreboard() {
+            scoreboardBody.innerHTML = '';
+            
+            // Urutkan pengguna berdasarkan skor (tertinggi ke terendah)
+            const sortedUsers = [...sampleUsers].sort((a, b) => b.score - a.score);
+            
+            sortedUsers.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.username}</td>
+                    <td>${user.score}</td>
+                `;
+                scoreboardBody.appendChild(row);
+            });
+        }
+        
+        // Load Challenges
+        function loadChallenges() {
+            challengesContainer.innerHTML = '';
+            
+            sampleChallenges.forEach(challenge => {
+                const card = document.createElement('div');
+                card.className = 'challenge-card';
+                card.innerHTML = `
+                    <h3 class="challenge-title">${challenge.title}</h3>
+                    <p><strong>Kategori:</strong> ${challenge.category}</p>
+                    <p class="challenge-points">${challenge.points} Poin</p>
+                    ${challenge.solved ? '<p class="challenge-solved">✓ Telah diselesaikan</p>' : ''}
+                    <button class="btn" style="margin-top: 1rem;">Lihat Detail</button>
+                `;
+                challengesContainer.appendChild(card);
+            });
+        }
+        
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', () => {
+            loadScoreboard();
+            loadChallenges();
+        });
+    </script>
+</body>
+</html>
